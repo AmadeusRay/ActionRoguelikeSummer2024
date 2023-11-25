@@ -9,8 +9,22 @@ ASPlayerState::ASPlayerState()
 
 float ASPlayerState::AddCreditState()
 {
+	++ credit;
 	UE_LOG(LogTemp, Warning, TEXT("ADDED CREDIT, %f"), credit);
-	return ++credit;
+	return 0;
 }
+
+float ASPlayerState::RemoveCreditState()
+{
+	--credit;
+	UE_LOG(LogTemp, Warning, TEXT("REMOVED CREDIT, %f"), credit);
+	return 0;
+}
+
+float ASPlayerState::GetCredit()
+{
+	return credit;
+}
+
 
 

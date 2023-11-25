@@ -19,11 +19,19 @@ public:
 	
 	UFUNCTION()
 	float AddCreditState();
+
+	UFUNCTION()
+	float RemoveCreditState();
+
+	UFUNCTION(BlueprintCallable, Category = "Credits")
+	float GetCredit();
+
 	
 protected:
 
 private:
 
+	UPROPERTY()
 	float credit = 0;
 	
 };

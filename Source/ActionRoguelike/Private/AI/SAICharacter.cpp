@@ -8,6 +8,7 @@
 #include "DrawDebugHelpers.h"
 #include "SAttributeComponent.h"
 #include "BrainComponent.h"
+#include "SCharacter.h"
 #include "SWorldUserWidget.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -80,23 +81,18 @@ void ASAICharacter::OnHealthChanged(AActor* InstigatorActor, USAttributeComponen
 			// set lifespan
 			SetLifeSpan(10.0f);
 
-			APlayerController* aPlayerController = Cast<APlayerController>(InstigatorActor);
-			if (aPlayerController)
-			{
-				APlayerState* aPlayerState = aPlayerController->GetPlayerState<APlayerState>();
-				if (aPlayerState)
+	
+
+				ASCharacter* PlayerCharacter = Cast<ASCharacter>(InstigatorActor);
+				
+				ASPlayerState* PS = Cast<ASPlayerState>(PlayerCharacter->GetPlayerState<ASPlayerState>());
+				if (PS)
 				{
-					ASPlayerState* MyPlayerState = Cast<ASPlayerState>(aPlayerState);
-					if (MyPlayerState)
-					{
-						MyPlayerState->AddCreditState();
-					}
+					PS->AddCreditState();
 				}
 			}
-			
 		}
 	}
-}
 
 
 void ASAICharacter::SetTargetActor(AActor* NewTarget)
