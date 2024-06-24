@@ -7,23 +7,27 @@ ASPlayerState::ASPlayerState()
 {
 }
 
-float ASPlayerState::AddCreditState()
+int32 ASPlayerState::AddCredit()
 {
-	++ credit;
-	UE_LOG(LogTemp, Warning, TEXT("ADDED CREDIT, %f"), credit);
+	++Credit;
+	OnCreditsChanged.Broadcast(this, Credit);
+	UE_LOG(LogTemp, Warning, TEXT("ADDED CREDIT, %f"), Credit);
 	return 0;
 }
 
-float ASPlayerState::RemoveCreditState()
+int32 ASPlayerState::RemoveCredit()
 {
-	--credit;
-	UE_LOG(LogTemp, Warning, TEXT("REMOVED CREDIT, %f"), credit);
+	--Credit;
+	OnCreditsChanged.Broadcast(this, Credit);
+	UE_LOG(LogTemp, Warning, TEXT("REMOVED CREDIT, %f"), Credit);
 	return 0;
 }
 
-float ASPlayerState::GetCredit()
+
+
+int32 ASPlayerState::GetCredit()
 {
-	return credit;
+	return Credit;
 }
 
 

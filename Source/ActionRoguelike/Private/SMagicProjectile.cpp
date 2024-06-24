@@ -9,7 +9,7 @@
 #include "Components/SphereComponent.h"
 #include "SActionComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
-
+#include "SActionEffect.h"
 
 ASMagicProjectile::ASMagicProjectile()
 {
@@ -19,11 +19,12 @@ ASMagicProjectile::ASMagicProjectile()
 	DamageAmount = 20.0f;
 }
 
-
 void ASMagicProjectile::OnActorOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	if (OtherActor && OtherActor != GetInstigator())
 	{
+		//static FGameplayTag Tag = FGameplayTag::RequestGameplayTag("Status.Parrying");
+		
 		USActionComponent* ActionComp = Cast<USActionComponent>(OtherActor->GetComponentByClass(USActionComponent::StaticClass()));
 		if (ActionComp && ActionComp->ActiveGameplayTags.HasTag(ParryTag))
 		{
@@ -32,10 +33,16 @@ void ASMagicProjectile::OnActorOverlap(UPrimitiveComponent* OverlappedComponent,
 			SetInstigator(Cast<APawn>(OtherActor));
 			return;
 		}
-		
+
+		// apply damage & impulse
 		if (USGameplayFunctionLibrary::ApplyDirectionalDamage(GetInstigator(), OtherActor, DamageAmount, SweepResult))
 		{
 			Explode();
+
+			if (ActionComp)
+			{
+				ActionComp->AddAction(GetInstigator(), BurningActionClass);
+			}
 		}
 	}
 }

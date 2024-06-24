@@ -24,7 +24,7 @@ void ASCoinUp::Interact_Implementation(APawn* InstigatorPawn)
 
 	ASPlayerState* PS = Cast<ASPlayerState>(PlayerCharacter->GetPlayerState<ASPlayerState>());
 	
-	PS->AddCreditState();
+	PS->AddCredit();
 	HideAndCooldownPowerup();
 }
 

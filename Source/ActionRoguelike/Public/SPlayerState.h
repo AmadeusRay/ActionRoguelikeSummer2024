@@ -6,6 +6,9 @@
 #include "GameFramework/PlayerState.h"
 #include "SPlayerState.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnCreditsChanged, ASPlayerState*, PlayerState, int32, NewCredits);
+// Looman uses a three param, with an int32 delta. Not sure what that is for. I messaged him.
+
 /**
  * 
  */
@@ -17,26 +20,26 @@ class ACTIONROGUELIKE_API ASPlayerState : public APlayerState
 public:
 	ASPlayerState();
 	
-	UFUNCTION()
-	float AddCreditState();
-
-	UFUNCTION()
-	float RemoveCreditState();
+	UFUNCTION(BlueprintCallable, Category = "Credits")
+	int32 AddCredit();
 
 	UFUNCTION(BlueprintCallable, Category = "Credits")
-	float GetCredit();
+	int32 RemoveCredit();
 
-	
+	UFUNCTION(BlueprintCallable, Category = "Credits")
+	int32 GetCredit();
+
+	UPROPERTY(BlueprintAssignable, Category = "Credits")
+	FOnCreditsChanged OnCreditsChanged;
+
 protected:
-
+	UPROPERTY(EditDefaultsOnly, Category = "Credits")
+	int32 Credit = 0;
+	
 private:
 
-	UPROPERTY()
-	float credit = 0;
+
 	
 };
 
 
-// notify when an AI character died.
-// use implementation or addDynamic?
-//Enemy health zero, add credit to playerstate of instigator)

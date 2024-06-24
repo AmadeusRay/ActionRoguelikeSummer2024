@@ -28,7 +28,7 @@ void ASPowerup_HealthPotion::Interact_Implementation(APawn* InstigatorPawn)
 	ASCharacter* PlayerCharacter = Cast<ASCharacter>(InstigatorPawn);
 
 	ASPlayerState* PS = Cast<ASPlayerState>(PlayerCharacter->GetPlayerState<ASPlayerState>());
-	float tempCredit = PS->GetCredit();
+	int32 tempCredit = PS->GetCredit();
 	
 	if (tempCredit)
 	{
@@ -42,7 +42,7 @@ void ASPowerup_HealthPotion::Interact_Implementation(APawn* InstigatorPawn)
 				if (AttributeComp->ApplyHealthChange(this, AttributeComp->GetHealthMax()))
 				{
 					HideAndCooldownPowerup();
-					PS->RemoveCreditState();
+					PS->RemoveCredit();
 				}
 			}
 		}
