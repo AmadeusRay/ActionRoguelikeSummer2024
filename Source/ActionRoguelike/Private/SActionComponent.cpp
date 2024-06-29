@@ -56,6 +56,7 @@ void USActionComponent::RemoveAction(USAction* ActionToRemove)
 	{
 		return;
 	}
+	
 	Actions.Remove(ActionToRemove);
 }
 
