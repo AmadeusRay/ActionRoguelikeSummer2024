@@ -23,8 +23,6 @@ int32 ASPlayerState::RemoveCredit()
 	return 0;
 }
 
-
-
 int32 ASPlayerState::GetCredit()
 {
 	return Credit;
