@@ -122,7 +122,11 @@ void ASCharacter::PrimaryAttack()
 
 void ASCharacter::BlackHoleAttack()
 {
-	ActionComp->StartActionByName(this, "Blackhole");
+	if (AttributeComp->GetRage()  > 25)
+	{
+		ActionComp->StartActionByName(this, "Blackhole");
+		AttributeComp->LoseRage();
+	}
 }
 
 void ASCharacter::Dash()

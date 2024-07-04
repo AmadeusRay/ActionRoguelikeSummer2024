@@ -7,6 +7,8 @@
 #include "GameFramework/Character.h"
 #include "SAICharacter.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPlayerSeen, AActor*, InstigatorActor);
+
 
 class UPawnSensingComponent;
 class USAttributeComponent;
@@ -15,7 +17,9 @@ class USWorldUserWidget;
 class PlayerStateClass;
 class USActionComponent;
 
-UCLASS()
+
+
+UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class ACTIONROGUELIKE_API ASAICharacter : public ACharacter
 {
 	GENERATED_BODY()
@@ -23,6 +27,13 @@ class ACTIONROGUELIKE_API ASAICharacter : public ACharacter
 public:
 
 	ASAICharacter();
+	
+	UPROPERTY(BlueprintAssignable)
+	FOnPlayerSeen OnPlayerSeen;
+
+	UFUNCTION(BlueprintCallable, Category = "Player Seen")
+	void OnPawnSeen(APawn* Pawn);
+
 
 protected:
 
@@ -50,6 +61,7 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	USActionComponent* ActionComp;
 
-	UFUNCTION()
-	void OnPawnSeen(APawn* Pawn);
+
+	
+	
 };

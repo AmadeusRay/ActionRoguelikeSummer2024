@@ -15,7 +15,6 @@
 #include "SPlayerState.h"
 
 
-
 ASAICharacter::ASAICharacter()
 {
 	PawnSensingComp = CreateDefaultSubobject<UPawnSensingComponent>("PawnSensingComp");
@@ -110,6 +109,7 @@ void ASAICharacter::SetTargetActor(AActor* NewTarget)
 void ASAICharacter::OnPawnSeen(APawn* Pawn)
 {
 	SetTargetActor(Pawn);
+	OnPlayerSeen.Broadcast(this);
 
 	DrawDebugString(GetWorld(), GetActorLocation(), "PLAYER SPOTTED", nullptr, FColor::White, 0.5f, true);
 }
