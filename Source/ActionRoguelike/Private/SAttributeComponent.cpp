@@ -2,14 +2,20 @@
 
 
 #include "SAttributeComponent.h"
+
+#include "FindInBlueprints.h"
 #include "SGameModeBase.h"
+#include "AI/SAICharacter.h"
 
 static TAutoConsoleVariable<float> CVarDamageMultiplier(TEXT("su.DamageMultipler"), 1.0f, TEXT("Global Damage Modifier for Attribute Component."), ECVF_Cheat);
 
 USAttributeComponent::USAttributeComponent()
 {
+	Rage = 0;
 	HealthMax = 100;
 	Health = HealthMax;
+	RageMax = 100;
+
 }
 
 bool USAttributeComponent::Kill(AActor* InstigatorActor)
@@ -23,6 +29,7 @@ bool USAttributeComponent::IsAlive() const
 	return Health > 0.0f;
 }
 
+//Health
 
 bool USAttributeComponent::IsFullHealth() const
 {
@@ -40,7 +47,6 @@ float USAttributeComponent::GetHealthMax() const
 	return HealthMax;
 }
 
-
 bool USAttributeComponent::ApplyHealthChange(AActor* InstigatorActor, float Delta)
 {
 	if (!GetOwner()->CanBeDamaged() && Delta < 0.0f)
@@ -51,9 +57,14 @@ bool USAttributeComponent::ApplyHealthChange(AActor* InstigatorActor, float Delt
 	if(Delta < 0.0f)
 	{
 		float DamageMultiplier = CVarDamageMultiplier.GetValueOnGameThread();
-
-		Delta *= DamageMultiplier;
 	}
+
+	// For Rage
+	if (Delta <= 0)
+	{
+		Rage = FMath::Clamp(Rage - Delta, 0.0f, RageMax);
+	}
+	
 
 	float OldHealth = Health;
 
@@ -62,6 +73,18 @@ bool USAttributeComponent::ApplyHealthChange(AActor* InstigatorActor, float Delt
 	float ActualDelta = Health - OldHealth;
 	OnHealthChanged.Broadcast(InstigatorActor, this, Health, ActualDelta);
 
+	AActor* OwnerActor = Cast<AActor>(GetOwner());
+	USActionComponent* ActionComp = Cast<USActionComponent>(OwnerActor->GetComponentByClass(USActionComponent::StaticClass()));
+	static FGameplayTag Tag = FGameplayTag::RequestGameplayTag("Status.Thorns");
+	if (ActionComp->ActiveGameplayTags.HasTag(Tag))
+		{
+		if (GetOwner()!=InstigatorActor)
+			{
+			USAttributeComponent* AttributeComp = USAttributeComponent::GetAttributes(InstigatorActor);
+			AttributeComp->ApplyHealthChange(InstigatorActor, -2);
+			}
+		}
+	
 	// Died
 	if (ActualDelta < 0.0f && Health == 0.0f)
 	{
@@ -73,6 +96,28 @@ bool USAttributeComponent::ApplyHealthChange(AActor* InstigatorActor, float Delt
 	}
 	
 	return ActualDelta != 0;
+}
+
+//Rage
+
+bool USAttributeComponent::IsFullRage() const
+{
+	return Rage == RageMax;
+}
+
+float USAttributeComponent::GetRage() const
+{
+	return Rage;
+}
+
+float USAttributeComponent::GetRageMax() const
+{
+	return RageMax;
+}
+
+void USAttributeComponent::LoseRage()
+{
+	 Rage -= (float)25;
 }
 
 

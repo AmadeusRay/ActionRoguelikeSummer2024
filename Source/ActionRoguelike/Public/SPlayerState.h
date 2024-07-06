@@ -9,9 +9,6 @@
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnCreditsChanged, ASPlayerState*, PlayerState, int32, NewCredits);
 // Looman uses a three param, with an int32 delta. Not sure what that is for. I messaged him.
 
-/**
- * 
- */
 UCLASS()
 class ACTIONROGUELIKE_API ASPlayerState : public APlayerState
 {
