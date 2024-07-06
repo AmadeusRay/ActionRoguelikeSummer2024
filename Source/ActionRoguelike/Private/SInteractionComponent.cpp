@@ -17,8 +17,6 @@ USInteractionComponent::USInteractionComponent()
 	CollisionChannel = ECC_WorldDynamic;
 }
 
-
-
 // Called when the game starts
 void USInteractionComponent::BeginPlay()
 {
@@ -115,14 +113,18 @@ void USInteractionComponent::FindBestInteractable()
 
 void USInteractionComponent::PrimaryInteract()
 {
-	if (FocusedActor == nullptr)
+	ServerInteract(FocusedActor);
+}
+
+void USInteractionComponent::ServerInteract_Implementation(AActor* InFocus)
+{
+	if (InFocus == nullptr)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, "No Focus Actor to Interact.");
 		return;
 	}
 	
 	APawn* MyPawn = Cast<APawn>(GetOwner());
-
-	ISGameplayInterface::Execute_Interact(FocusedActor, MyPawn);
+	ISGameplayInterface::Execute_Interact(InFocus, MyPawn);
 }
 
