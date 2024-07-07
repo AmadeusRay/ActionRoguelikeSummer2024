@@ -11,7 +11,15 @@ ASPowerupActor::ASPowerupActor()
 	SphereComp->SetCollisionProfileName("Powerup");
 	RootComponent = SphereComp;
 
+	// forgot to add this, check power up for changes
+	MeshComp = CreateDefaultSubobject<UStaticMeshComponent>("MeshComp");
+	//Disables collision, we use the sphere comp to handle instance queries
+	MeshComp->SetCollisionEnabled((ECollisionEnabled::NoCollision));
+	MeshComp->SetupAttachment(RootComponent);
+
 	RespawnTime = 10.0f;
+
+	SetReplicates(true);
 }
 
 

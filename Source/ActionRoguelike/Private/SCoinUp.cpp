@@ -6,12 +6,7 @@
 #include "SPlayerState.h"
 
 ASCoinUp::ASCoinUp()
-{
-	MeshComp = CreateDefaultSubobject<UStaticMeshComponent>("MeshComp");
-	// Disable collision, instead we use SphereComp to handle interaction queries
-	MeshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	MeshComp->SetupAttachment(RootComponent);
-}
+{}
 
 void ASCoinUp::Interact_Implementation(APawn* InstigatorPawn)
 {

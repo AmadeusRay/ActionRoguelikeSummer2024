@@ -15,8 +15,8 @@ class ACTIONROGUELIKE_API ASCoinUp : public ASPowerupActor
 	GENERATED_BODY()
 
 protected:
-	UPROPERTY(VisibleAnywhere, Category = "Components")
-	UStaticMeshComponent* MeshComp;
+//	UPROPERTY(VisibleAnywhere, Category = "Components")
+//	UStaticMeshComponent* MeshComp;
 
 public:
 	void Interact_Implementation(APawn* InstigatorPawn) override;

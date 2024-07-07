@@ -38,8 +38,5 @@ void ASItemChest::OnRep_LidOpened()
 void ASItemChest::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
-
 	DOREPLIFETIME(ASItemChest, bLidOpened);
-
-	
 }
