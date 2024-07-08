@@ -5,9 +5,6 @@
 #include "Kismet/GameplayStatics.h"
 #include "BehaviorTree/BlackboardComponent.h"
 
-
-
-
 void ASAIController::BeginPlay()
 {
 	Super::BeginPlay();

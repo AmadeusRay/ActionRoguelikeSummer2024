@@ -8,8 +8,9 @@
 USActionComponent::USActionComponent()
 {
 	PrimaryComponentTick.bCanEverTick = true;
-}
 
+	SetIsReplicatedByDefault(true);
+}
 
 void USActionComponent::BeginPlay()
 {
@@ -63,20 +64,26 @@ void USActionComponent::RemoveAction(USAction* ActionToRemove)
 bool USActionComponent::StartActionByName(AActor* Instigator, FName ActionName)
 {
 	for (USAction* Action : Actions)
-{
-		if (Action && Action->ActionName == ActionName)
 		{
-			if(!Action->CanStart(Instigator))
+			if (Action && Action->ActionName == ActionName)
 			{
-				FString FailedMSG = FString::Printf(TEXT("Failed to run: %s"), *ActionName.ToString());
-				GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, FailedMSG);
-				continue;
+				if(!Action->CanStart(Instigator))
+				{
+					FString FailedMSG = FString::Printf(TEXT("Failed to run: %s"), *ActionName.ToString());
+					GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, FailedMSG);
+					continue;
+				}
+
+				// Is Client?
+				if (!GetOwner()->HasAuthority())
+				{
+					ServerStartAction(Instigator, ActionName);
+				}
+				
+				Action->StartAction(Instigator);
+				return true;
 			}
-			
-			Action->StartAction(Instigator);
-			return true;
 		}
-}
 	return false;
 }
 
@@ -95,4 +102,9 @@ bool USActionComponent::StopActionByName(AActor* Instigator, FName ActionName)
 	}
 	
 	return false;
+}
+
+void USActionComponent::ServerStartAction_Implementation(AActor* Instigator, FName ActionName)
+{
+	StartActionByName(Instigator, ActionName);
 }
