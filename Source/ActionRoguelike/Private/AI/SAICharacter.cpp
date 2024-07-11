@@ -81,16 +81,6 @@ void ASAICharacter::OnHealthChanged(AActor* InstigatorActor, USAttributeComponen
 			
 			// set lifespan
 			SetLifeSpan(10.0f);
-
-	
-
-				ASCharacter* PlayerCharacter = Cast<ASCharacter>(InstigatorActor);
-				
-				ASPlayerState* PS = Cast<ASPlayerState>(PlayerCharacter->GetPlayerState<ASPlayerState>());
-				if (PS)
-				{
-					PS->AddCredit();
-				}
 			}
 		}
 	}

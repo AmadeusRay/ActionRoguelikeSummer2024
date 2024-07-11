@@ -2,11 +2,12 @@
 
 
 #include "SCoinUp.h"
-#include "SCharacter.h"
 #include "SPlayerState.h"
 
 ASCoinUp::ASCoinUp()
-{}
+{
+	CreditsAmount = 80;
+}
 
 void ASCoinUp::Interact_Implementation(APawn* InstigatorPawn)
 {
@@ -15,11 +16,10 @@ void ASCoinUp::Interact_Implementation(APawn* InstigatorPawn)
 		return;
 	}
 	
-	ASCharacter* PlayerCharacter = Cast<ASCharacter>(InstigatorPawn);
-
-	ASPlayerState* PS = Cast<ASPlayerState>(PlayerCharacter->GetPlayerState<ASPlayerState>());
-	
-	PS->AddCredit();
-	HideAndCooldownPowerup();
+	if (ASPlayerState* PS = InstigatorPawn->GetPlayerState<ASPlayerState>())
+	{
+		PS->AddCredits(CreditsAmount);
+		HideAndCooldownPowerup();
+	}
 }
 

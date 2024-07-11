@@ -46,10 +46,7 @@ void USInteractionComponent::FindBestInteractable()
 	MyOwner->GetActorEyesViewPoint(EyeLocation, EyeRotation);
 	
 	FVector End = EyeLocation + (EyeRotation.Vector() * TraceDistance);
-
-	//FHitResult Hit;
-	//bool bBlockingHit = GetWorld()->LineTraceSingleByObjectType(Hit, EyeLocation, End, ObjectQueryParams);
-
+	
 	TArray<FHitResult> Hits;
 
 	FCollisionShape Shape;

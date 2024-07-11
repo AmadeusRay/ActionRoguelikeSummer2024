@@ -9,10 +9,6 @@
 
 class UStaticMeshComponent;
 
-
-/**
- * 
- */
 UCLASS()
 class ACTIONROGUELIKE_API ASPowerup_HealthPotion : public ASPowerupActor
 {
@@ -20,8 +16,8 @@ class ACTIONROGUELIKE_API ASPowerup_HealthPotion : public ASPowerupActor
 	
 protected:
 
-	//UPROPERTY(VisibleAnywhere, Category = "Components")
-	//UStaticMeshComponent* MeshComp;
+	UPROPERTY(EditAnywhere, Category= "HealthPotion")
+	int32 CreditCost;
 
 public:
 

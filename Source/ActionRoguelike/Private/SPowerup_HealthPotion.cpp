@@ -3,15 +3,15 @@
 
 #include "SPowerup_HealthPotion.h"
 #include "SAttributeComponent.h"
-#include "SCharacter.h"
 #include "SPlayerState.h"
 
 
 
 
 ASPowerup_HealthPotion::ASPowerup_HealthPotion()
-{}
-
+{
+	CreditCost = 50;
+}
 
 void ASPowerup_HealthPotion::Interact_Implementation(APawn* InstigatorPawn)
 {
@@ -19,26 +19,18 @@ void ASPowerup_HealthPotion::Interact_Implementation(APawn* InstigatorPawn)
 	{
 		return;
 	}
-	
-	ASCharacter* PlayerCharacter = Cast<ASCharacter>(InstigatorPawn);
 
-	ASPlayerState* PS = Cast<ASPlayerState>(PlayerCharacter->GetPlayerState<ASPlayerState>());
-	int32 tempCredit = PS->GetCredit();
+	USAttributeComponent* AttributeComp = USAttributeComponent::GetAttributes((InstigatorPawn));
+	// check if not already at max health
 	
-	if (tempCredit)
+	if (ensure(AttributeComp) && !AttributeComp->IsFullHealth())
 	{
-		if(tempCredit > 0)
+		if(ASPlayerState* PS = InstigatorPawn->GetPlayerState<ASPlayerState>())
 		{
-			USAttributeComponent* AttributeComp = USAttributeComponent::GetAttributes(InstigatorPawn);
-			// Check if not already at max health
-			if (ensure(AttributeComp) && !AttributeComp->IsFullHealth())
+			if(PS->RemoveCredits(CreditCost) && AttributeComp->ApplyHealthChange(this, AttributeComp->GetHealthMax()))
 			{
 				// Only activate if healed successfully
-				if (AttributeComp->ApplyHealthChange(this, AttributeComp->GetHealthMax()))
-				{
-					HideAndCooldownPowerup();
-					PS->RemoveCredit();
-				}
+				HideAndCooldownPowerup();
 			}
 		}
 	}

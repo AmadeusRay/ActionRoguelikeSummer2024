@@ -3,29 +3,37 @@
 
 #include "SPlayerState.h"
 
-ASPlayerState::ASPlayerState()
+void ASPlayerState::AddCredits(int32 Delta)
 {
+	// Avoid user-error of adding a negative amount or zero
+	if (!ensure(Delta > 0.0f))
+	{
+		return;
+	}
+
+	Credits += Delta;
+	
+	OnCreditsChanged.Broadcast(this, Credits, Delta);
 }
 
-int32 ASPlayerState::AddCredit()
+bool ASPlayerState::RemoveCredits(int32 Delta)
 {
-	++Credit;
-	OnCreditsChanged.Broadcast(this, Credit);
-	UE_LOG(LogTemp, Warning, TEXT("ADDED CREDIT, %f"), Credit);
-	return 0;
+	// Avoid user-error of adding a negative amount or zero
+	if (!ensure(Delta > 0.0f))
+	{
+		return false;
+	}
+	
+	Credits -= Delta;
+	
+	OnCreditsChanged.Broadcast(this, Credits, -Delta);
+
+	return true;
 }
 
-int32 ASPlayerState::RemoveCredit()
+int32 ASPlayerState::GetCredits() const
 {
-	--Credit;
-	OnCreditsChanged.Broadcast(this, Credit);
-	UE_LOG(LogTemp, Warning, TEXT("REMOVED CREDIT, %f"), Credit);
-	return 0;
-}
-
-int32 ASPlayerState::GetCredit()
-{
-	return Credit;
+	return Credits;
 }
 
 

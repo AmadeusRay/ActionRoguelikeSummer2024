@@ -6,37 +6,31 @@
 #include "GameFramework/PlayerState.h"
 #include "SPlayerState.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnCreditsChanged, ASPlayerState*, PlayerState, int32, NewCredits);
-// Looman uses a three param, with an int32 delta. Not sure what that is for. I messaged him.
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnCreditsChanged, ASPlayerState*, PlayerState, int32, NewCredits, int32, Delta);
 
 UCLASS()
 class ACTIONROGUELIKE_API ASPlayerState : public APlayerState
 {
 	GENERATED_BODY()
 
+protected:
+
+	UPROPERTY(EditDefaultsOnly, Category = "Credits")
+	int32 Credits = 0;
+
 public:
-	ASPlayerState();
+
+	UFUNCTION(BlueprintCallable, Category = "Credits")
+	int32 GetCredits() const;
 	
 	UFUNCTION(BlueprintCallable, Category = "Credits")
-	int32 AddCredit();
+	void AddCredits(int32 Delta);
 
 	UFUNCTION(BlueprintCallable, Category = "Credits")
-	int32 RemoveCredit();
-
-	UFUNCTION(BlueprintCallable, Category = "Credits")
-	int32 GetCredit();
-
+	bool RemoveCredits(int32 Delta);
+	
 	UPROPERTY(BlueprintAssignable, Category = "Credits")
 	FOnCreditsChanged OnCreditsChanged;
-
-protected:
-	UPROPERTY(EditDefaultsOnly, Category = "Credits")
-	int32 Credit = 0;
-	
-private:
-
-
-	
 };
 
 

@@ -6,6 +6,8 @@
 #include "SPowerupActor.h"
 #include "SCoinUp.generated.h"
 
+
+
 /**
  * 
  */
@@ -15,8 +17,9 @@ class ACTIONROGUELIKE_API ASCoinUp : public ASPowerupActor
 	GENERATED_BODY()
 
 protected:
-//	UPROPERTY(VisibleAnywhere, Category = "Components")
-//	UStaticMeshComponent* MeshComp;
+
+	UPROPERTY(EditAnywhere, Category = "Credts")
+	int32 CreditsAmount;
 
 public:
 	void Interact_Implementation(APawn* InstigatorPawn) override;

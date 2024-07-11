@@ -35,11 +35,33 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "AI")
 	float SpawnTimerInterval;
 
+	// Read/Write Access as we could change this as our difficulty increases va Blueprint
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category= "AI")
+	int32 CreditsPerKill;
+
+	UPROPERTY(EditDefaultsOnly, Category= "Powerups")
+	UEnvQuery* PowerupSpawnQuery;
+
+	/* All power-up classes used to spawn with EQS at match start */
+	UPROPERTY(EditDefaultsOnly, Category= "PowerUps")
+	TArray<TSubclassOf<AActor>> PowerUpClasses;
+
+	/* Distance required between power-up spawn locations */
+	UPROPERTY(EditDefaultsOnly, Category= "PowerUps")
+	float RequiredPowerupDistance;
+
+	/* Amount of powerups to spawn during match start */
+	UPROPERTY (EditDefaultsOnly, Category = "Powerups")
+	int32 DesiredPowerupCount;
+
 	UFUNCTION()
 	void SpawnBotTimerElapsed();
 
 	UFUNCTION()
-	void OnQueryCompleted(UEnvQueryInstanceBlueprintWrapper* QueryInstance, EEnvQueryStatus::Type QueryStatus);
+	void OnBotSpawnQueryCompleted(UEnvQueryInstanceBlueprintWrapper* QueryInstance, EEnvQueryStatus::Type QueryStatus);
+
+	UFUNCTION()
+	void OnPowerupSpawnQueryCompleted(UEnvQueryInstanceBlueprintWrapper* QueryInstance, EEnvQueryStatus::Type QueryStatus);
 
 	UFUNCTION()
 	void RespawnPlayerElapse(AController* Controller);

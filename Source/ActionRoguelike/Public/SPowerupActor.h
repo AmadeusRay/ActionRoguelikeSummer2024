@@ -9,12 +9,13 @@
 
 
 class USphereComponent;
+class UStaticMeshComponent;
 
 
 UCLASS()
 class ACTIONROGUELIKE_API ASPowerupActor : public AActor, public ISGameplayInterface
 {
-	GENERATED_BODY()
+	GENERATED_BODY(ABSTRACT)
 
 protected:
 
