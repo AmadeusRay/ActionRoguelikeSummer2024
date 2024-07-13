@@ -2,8 +2,8 @@
 
 
 #include "SActionComponent.h"
-
 #include "SAction.h"
+
 
 USActionComponent::USActionComponent()
 {
@@ -11,6 +11,7 @@ USActionComponent::USActionComponent()
 
 	SetIsReplicatedByDefault(true);
 }
+
 
 void USActionComponent::BeginPlay()
 {
@@ -29,8 +30,8 @@ void USActionComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAct
 
 	FString DebugMsg = GetNameSafe(GetOwner()) + " : " + ActiveGameplayTags.ToStringSimple();
 	GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::White, DebugMsg);
-	
 }
+
 
 void USActionComponent::AddAction(AActor* Instigator, TSubclassOf<USAction> ActionClass)
 {
@@ -40,7 +41,7 @@ void USActionComponent::AddAction(AActor* Instigator, TSubclassOf<USAction> Acti
 	}
 
 	USAction* NewAction = NewObject<USAction>(this, ActionClass);
-	if(ensure(NewAction))
+	if (ensure(NewAction))
 	{
 		Actions.Add(NewAction);
 
@@ -51,41 +52,59 @@ void USActionComponent::AddAction(AActor* Instigator, TSubclassOf<USAction> Acti
 	}
 }
 
+
 void USActionComponent::RemoveAction(USAction* ActionToRemove)
 {
-	if (!ensure (ActionToRemove && !ActionToRemove->IsRunning()))
+	if (!ensure(ActionToRemove && !ActionToRemove->IsRunning()))
 	{
 		return;
 	}
-	
+
 	Actions.Remove(ActionToRemove);
 }
+
+
+USAction* USActionComponent::GetAction(TSubclassOf<USAction> ActionClass) const
+{
+	for (USAction* Action : Actions)
+	{
+		if (Action && Action->IsA(ActionClass))
+		{
+			return Action;
+		}
+	}
+
+	return nullptr;
+}
+
 
 bool USActionComponent::StartActionByName(AActor* Instigator, FName ActionName)
 {
 	for (USAction* Action : Actions)
+	{
+		if (Action && Action->ActionName == ActionName)
 		{
-			if (Action && Action->ActionName == ActionName)
+			if (!Action->CanStart(Instigator))
 			{
-				if(!Action->CanStart(Instigator))
-				{
-					FString FailedMSG = FString::Printf(TEXT("Failed to run: %s"), *ActionName.ToString());
-					GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, FailedMSG);
-					continue;
-				}
-
-				// Is Client?
-				if (!GetOwner()->HasAuthority())
-				{
-					ServerStartAction(Instigator, ActionName);
-				}
-				
-				Action->StartAction(Instigator);
-				return true;
+				FString FailedMsg = FString::Printf(TEXT("Failed to run: %s"), *ActionName.ToString());
+				GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, FailedMsg);
+				continue;
 			}
+
+			// Is Client?
+			if (!GetOwner()->HasAuthority())
+			{
+				ServerStartAction(Instigator, ActionName);
+			}
+
+			Action->StartAction(Instigator);
+			return true;
 		}
+	}
+
 	return false;
 }
+
 
 bool USActionComponent::StopActionByName(AActor* Instigator, FName ActionName)
 {
@@ -100,9 +119,10 @@ bool USActionComponent::StopActionByName(AActor* Instigator, FName ActionName)
 			}
 		}
 	}
-	
+
 	return false;
 }
+
 
 void USActionComponent::ServerStartAction_Implementation(AActor* Instigator, FName ActionName)
 {

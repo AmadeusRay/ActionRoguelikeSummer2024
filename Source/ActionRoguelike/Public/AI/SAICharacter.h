@@ -7,7 +7,7 @@
 #include "GameFramework/Character.h"
 #include "SAICharacter.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPlayerSeen, AActor*, InstigatorActor);
+//DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPlayerSeen, AActor*, InstigatorActor);
 
 
 class UPawnSensingComponent;
@@ -18,8 +18,7 @@ class PlayerStateClass;
 class USActionComponent;
 
 
-
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS()
 class ACTIONROGUELIKE_API ASAICharacter : public ACharacter
 {
 	GENERATED_BODY()
@@ -27,13 +26,6 @@ class ACTIONROGUELIKE_API ASAICharacter : public ACharacter
 public:
 
 	ASAICharacter();
-	
-	UPROPERTY(BlueprintAssignable)
-	FOnPlayerSeen OnPlayerSeen;
-
-	UFUNCTION(BlueprintCallable, Category = "Player Seen")
-	void OnPawnSeen(APawn* Pawn);
-
 
 protected:
 
@@ -42,10 +34,23 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "UI")
 	TSubclassOf<UUserWidget> HealthBarWidgetClass;
 
+	/* Widget to display when bot first sees a player. */
+	UPROPERTY(EditDefaultsOnly, Category = "UI")
+	TSubclassOf<UUserWidget> SpottedWidgetClass;
+
+	/* Material parameter for Hitflashes */
 	UPROPERTY(VisibleAnywhere, Category = "Effects")
 	FName TimeToHitParamName;
 
+	/* Key for AI Blackboard 'TargetActor' */
+	UPROPERTY(VisibleAnywhere, Category = "Effects")
+	FName TargetActorKey;
+
+	UFUNCTION(BlueprintCallable, Category = "AI")
 	void SetTargetActor(AActor* NewTarget);
+
+	UFUNCTION(BlueprintCallable, Category = "AI")
+	AActor* GetTargetActor() const;
 
 	virtual void PostInitializeComponents() override;
 
@@ -61,7 +66,6 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	USActionComponent* ActionComp;
 
-
-	
-	
+	UFUNCTION()
+	void OnPawnSeen(APawn* Pawn);
 };

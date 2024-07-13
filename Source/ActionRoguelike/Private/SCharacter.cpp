@@ -122,11 +122,7 @@ void ASCharacter::PrimaryAttack()
 
 void ASCharacter::BlackHoleAttack()
 {
-	if (AttributeComp->GetRage()  > 25)
-	{
-		ActionComp->StartActionByName(this, "Blackhole");
-		AttributeComp->LoseRage();
-	}
+	ActionComp->StartActionByName(this, "Blackhole");
 }
 
 void ASCharacter::Dash()
@@ -145,11 +141,17 @@ void ASCharacter::PrimaryInteract()
 
 void ASCharacter::OnHealthChanged(AActor* InstigatorActor, USAttributeComponent* OwningComp, float NewHealth, float Delta)
 {
+	// Damaged
 	if (Delta < 0.0f)
 	{
 		GetMesh()->SetScalarParameterValueOnMaterials(TimeToHitParamName, GetWorld()->TimeSeconds);
+
+		// Rage added equal to damage received (Abs to turn into positive rage number)
+		float RageDelta = FMath::Abs(Delta);
+		AttributeComp->ApplyRage(InstigatorActor, RageDelta);
 	}
 
+	// Dead
 	if (NewHealth <= 0.0f && Delta < 0.0f)
 	{
 		APlayerController* PC = Cast<APlayerController>(GetController());
