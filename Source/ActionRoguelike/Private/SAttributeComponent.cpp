@@ -64,11 +64,11 @@ bool USAttributeComponent::ApplyHealthChange(AActor* InstigatorActor, float Delt
 	}
 
 	float OldHealth = Health;
-
 	Health = FMath::Clamp(Health + Delta, 0.0f, HealthMax);
 
 	float ActualDelta = Health - OldHealth;
 	//OnHealthChanged.Broadcast(InstigatorActor, this, Health, ActualDelta);
+	
 	if (ActualDelta != 0.0f)
 	{
 		MulticastHealthChanged(InstigatorActor, Health, ActualDelta);
@@ -88,13 +88,15 @@ bool USAttributeComponent::ApplyHealthChange(AActor* InstigatorActor, float Delt
 }
 
 
+
+
 float USAttributeComponent::GetRage() const
 {
 	return Rage;
 }
 
 
-bool USAttributeComponent::ApplyRage(AActor* InstigatorActor, float Delta)
+bool USAttributeComponent::ApplyRageChange(AActor* InstigatorActor, float Delta)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Some warning message1") );
 	float OldRage = Rage;
@@ -104,7 +106,6 @@ bool USAttributeComponent::ApplyRage(AActor* InstigatorActor, float Delta)
 	float ActualDelta = Rage - OldRage;
 	if (ActualDelta != 0.0f)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Some warning message2") );
 		OnRageChanged.Broadcast(InstigatorActor, this, Rage, ActualDelta);
 	}
 
@@ -141,11 +142,19 @@ void USAttributeComponent::MulticastHealthChanged_Implementation(AActor* Instiga
 }
 
 
+void USAttributeComponent::MulticastRageChanged_Implementation(AActor* InstigatorActor, float NewRage, float Delta)
+{
+	OnRageChanged.Broadcast(InstigatorActor, this, NewRage, Delta);
+}
+
+
 void USAttributeComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	DOREPLIFETIME(USAttributeComponent, Health);
 	DOREPLIFETIME(USAttributeComponent, HealthMax);
-	//DOREPLIFETIME_CONDITION(USAttributeComponent, HealthMax, COND_InitialOnly);
+
+	DOREPLIFETIME(USAttributeComponent, Rage);
+	DOREPLIFETIME(USAttributeComponent, RageMax);
 }

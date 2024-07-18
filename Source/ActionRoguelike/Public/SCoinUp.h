@@ -21,8 +21,14 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Credts")
 	int32 CreditsAmount;
 
+	UPROPERTY(ReplicatedUsing="OnRep_CoinTaken", BlueprintReadOnly) // RepNotify
+	bool bCoinTaken;
+
+	UFUNCTION()
+	void OnRep_CoinTaken();
+
 public:
-	void Interact_Implementation(APawn* InstigatorPawn) override;
+	virtual void Interact_Implementation(APawn* InstigatorPawn) override;
 
 	ASCoinUp();
 	

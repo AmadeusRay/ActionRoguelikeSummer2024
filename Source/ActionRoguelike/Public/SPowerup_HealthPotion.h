@@ -4,7 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "SPowerupActor.h"
+#include "Net/UnrealNetwork.h"
 #include "SPowerup_HealthPotion.generated.h"
+
 
 
 class UStaticMeshComponent;
@@ -21,7 +23,8 @@ protected:
 
 public:
 
-	void Interact_Implementation(APawn* InstigatorPawn) override;
+	virtual void Interact_Implementation(APawn* InstigatorPawn) override;
 
 	ASPowerup_HealthPotion();
 };
+

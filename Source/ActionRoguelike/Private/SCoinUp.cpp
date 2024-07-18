@@ -3,11 +3,15 @@
 
 #include "SCoinUp.h"
 #include "SPlayerState.h"
+#include "Net/UnrealNetwork.h"
 
 ASCoinUp::ASCoinUp()
 {
-	CreditsAmount = 80;
+	CreditsAmount = 10;
+
+	bReplicates=true;
 }
+
 
 void ASCoinUp::Interact_Implementation(APawn* InstigatorPawn)
 {
@@ -19,7 +23,19 @@ void ASCoinUp::Interact_Implementation(APawn* InstigatorPawn)
 	if (ASPlayerState* PS = InstigatorPawn->GetPlayerState<ASPlayerState>())
 	{
 		PS->AddCredits(CreditsAmount);
-		HideAndCooldownPowerup();
+		OnRep_CoinTaken();
 	}
 }
 
+void ASCoinUp::OnRep_CoinTaken()
+{
+	bCoinTaken = true;
+	HideAndCooldownPowerup();
+}
+
+void ASCoinUp::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(ASCoinUp, bCoinTaken);
+}

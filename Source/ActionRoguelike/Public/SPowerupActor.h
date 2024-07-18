@@ -12,12 +12,18 @@ class USphereComponent;
 class UStaticMeshComponent;
 
 
-UCLASS()
+UCLASS(ABSTRACT)
 class ACTIONROGUELIKE_API ASPowerupActor : public AActor, public ISGameplayInterface
 {
-	GENERATED_BODY(ABSTRACT)
+	GENERATED_BODY()
 
 protected:
+
+	UPROPERTY(ReplicatedUsing="OnRep_IsActive")
+	bool bIsActive;
+
+	UFUNCTION()
+	void OnRep_IsActive();
 
 	UPROPERTY(EditAnywhere, Category = "Powerup")
 	float RespawnTime;
@@ -44,5 +50,5 @@ public:
 public:
 
 	ASPowerupActor();
-
+	
 };

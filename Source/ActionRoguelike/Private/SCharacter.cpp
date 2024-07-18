@@ -138,7 +138,6 @@ void ASCharacter::PrimaryInteract()
 	}
 }
 
-
 void ASCharacter::OnHealthChanged(AActor* InstigatorActor, USAttributeComponent* OwningComp, float NewHealth, float Delta)
 {
 	// Damaged
@@ -148,7 +147,7 @@ void ASCharacter::OnHealthChanged(AActor* InstigatorActor, USAttributeComponent*
 
 		// Rage added equal to damage received (Abs to turn into positive rage number)
 		float RageDelta = FMath::Abs(Delta);
-		AttributeComp->ApplyRage(InstigatorActor, RageDelta);
+		AttributeComp->ApplyRageChange(InstigatorActor, RageDelta);
 	}
 
 	// Dead
@@ -157,4 +156,8 @@ void ASCharacter::OnHealthChanged(AActor* InstigatorActor, USAttributeComponent*
 		APlayerController* PC = Cast<APlayerController>(GetController());
 		DisableInput(PC);
 	}
+}
+
+void ASCharacter::OnRageChanged(AActor* InstigatorActor, USAttributeComponent* OwningComp, float NewRage, float Delta)
+{
 }

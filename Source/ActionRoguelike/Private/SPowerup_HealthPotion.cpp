@@ -10,8 +10,12 @@
 
 ASPowerup_HealthPotion::ASPowerup_HealthPotion()
 {
-	CreditCost = 50;
+	CreditCost = 10;
+
+	bReplicates=true;
 }
+
+
 
 void ASPowerup_HealthPotion::Interact_Implementation(APawn* InstigatorPawn)
 {
@@ -31,6 +35,7 @@ void ASPowerup_HealthPotion::Interact_Implementation(APawn* InstigatorPawn)
 			{
 				// Only activate if healed successfully
 				HideAndCooldownPowerup();
+			
 			}
 		}
 	}
